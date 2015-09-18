@@ -1,0 +1,31 @@
+---
+- hosts: all
+  become_method: sudo
+  become: true
+  tasks:
+  - name: turn off install_recommends for apt
+    lineinfile: dest=/etc/apt/apt.conf.d/01norecommend state=present create=yes line="{{ item }}"
+    with_items:
+      - APT::Install-Recommends "0";
+      - APT::Install-Suggests "0";
+      
+  - name: emacs snapshot repo
+    apt_repository: repo={{ item }} state=present
+    with_items:
+      - "'deb http://ppa.launchpad.net/ubuntu-elisp/ppa/ubuntu trusty main'"
+      - "'deb-src http://ppa.launchpad.net/ubuntu-elisp/ppa/ubuntu trusty main'"
+    
+  - name: core packages
+    apt: update_cache=yes cache_valid_time=3600 name={{ item }} state=present
+    with_items:
+      - curl
+      - wget
+      - git
+      - screen
+      - finger
+      
+  - name: safe upgrade
+    apt: upgrade=safe
+    
+  - name: emacs build dependencies
+    apt: state=build-dep name=emacs24-nox
