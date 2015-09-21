@@ -63,9 +63,7 @@ Vagrant.configure(2) do |config|
     end.find do |s|
       !File.directory?(s) && File.readable?(s)
     end
-
-    provider.client_id = ENV["DIGITAL_OCEAN_CLIENT_ID"]
-    provider.api_key = ENV["DIGITAL_OCEAN_API_KEY"]
+    provider.token = ENV["DIGITAL_OCEAN_PERSONAL_ACCESS_TOKEN"]
     provider.image = "Ubuntu 14.04 x64"
   end
 end
