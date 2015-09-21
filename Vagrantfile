@@ -51,4 +51,22 @@ Vagrant.configure(2) do |config|
       }
     ]
   end
+
+  config.vm.provider :digital_ocean do |provider, override|
+    override.vm.box = 'digital_ocean'
+    override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+    #override.vm.hostname = "mosaic"
+    #override.vm.host_name = "mosaic"
+    #override.ssh.username = "mosaic"
+    override.ssh.private_key_path = ["~/.ssh/id_rsa", "~/.ssh/id_dsa"].map do |s|
+      File.expand_path(s)
+    end.find do |s|
+      !File.directory?(s) && File.readable?(s)
+    end
+
+    provider.client_id = ENV["DIGITAL_OCEAN_CLIENT_ID"]
+    provider.api_key = ENV["DIGITAL_OCEAN_API_KEY"]
+    provider.image = "Ubuntu 14.04 x64"
+    provider.ca_path = "#{`brew --prefix`.chomp}/share/ca-bundle.crt"
+  end
 end
