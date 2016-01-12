@@ -12,8 +12,10 @@
   - name: emacs snapshot repo
     apt_repository: repo={{ item }} state=present
     with_items:
-      - "'deb http://ppa.launchpad.net/ubuntu-elisp/ppa/ubuntu trusty main'"
-      - "'deb-src http://ppa.launchpad.net/ubuntu-elisp/ppa/ubuntu trusty main'"
+      - "ppa:ubuntu-elisp/ppa"
+
+  - name: emacs snapshot repo key
+    apt_key: keyserver=keyserver.ubuntu.com id=062D648FD62FCE72
     
   - name: core packages
     apt: update_cache=yes cache_valid_time=3600 name={{ item }} state=present
@@ -23,9 +25,7 @@
       - git
       - screen
       - finger
+      - emacs-snapshot-nox
       
   - name: safe upgrade
     apt: upgrade=safe
-    
-  - name: emacs build dependencies
-    apt: state=build-dep name=emacs24-nox
